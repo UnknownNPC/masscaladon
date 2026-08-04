@@ -31,7 +31,7 @@ given ExecutionContext = ExecutionContext.global
 val mastodon = Masscaladon("https://example.social", token = "...")
 
 // async
-val request = Requests.statuses.createStatus(CreateStatusRequest(status = "hello"))
+val request = Requests.statuses.createStatus(CreateStatusRequest(status = Some("hello")))
 mastodon.execute(request)
 
 // blocking, e.g. from a script
@@ -45,16 +45,14 @@ returned attachment's `id` in the status:
 
 ```scala
 import java.io.File
-import com.github.unknownnpc.masscaladon.generated.model.UpdateStatusRequestPoll
 
 val post =
   for
     media <- mastodon.executeSync(Requests.media.createMedia(file = File("cat.jpg")))
     status <- mastodon.executeSync(Requests.statuses.createStatus(
       CreateStatusRequest(
-        status = "look at this cat",
-        mediaIds = Seq(media.id),
-        poll = UpdateStatusRequestPoll(),
+        status = Some("look at this cat"),
+        mediaIds = Some(Seq(media.id)),
       ),
     ))
   yield status
@@ -66,8 +64,10 @@ post match
 
 ## Project layout
 
-Two sbt modules, one pipeline: download the spec and generate a raw client
-from it → wrap it in the hand-written `scala-client` API shown above.
+Two sbt modules, one pipeline: download the spec, patch it
+([`project/OneOfSpecFix.scala`](./project/OneOfSpecFix.scala) — works around an
+openapi-generator limitation around `oneOf` schemas), and generate a raw client from it
+→ wrap it in the hand-written `scala-client` API shown above.
 
 ```
 sbt openApiClient/downloadMastodonSchema   # fetch the OpenAPI spec
