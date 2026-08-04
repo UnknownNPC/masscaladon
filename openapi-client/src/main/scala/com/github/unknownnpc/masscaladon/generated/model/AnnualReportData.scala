@@ -12,6 +12,7 @@
 package com.github.unknownnpc.masscaladon.generated.model
 
 import io.circe.{Decoder, Encoder}
+import io.circe.derivation.{ConfiguredDecoder, ConfiguredEncoder}
 import com.github.unknownnpc.masscaladon.generated.core.AdditionalTypeSerializers.given
 import com.github.unknownnpc.masscaladon.generated.core.DateSerializers.given
 
@@ -37,7 +38,7 @@ case class AnnualReportData(
   mostRebloggedAccounts: Option[Seq[io.circe.Json]] = None,
   /* Which percentile of the most prolific posters on the same server the user is in. Only available in schema version 1. */
   percentiles: Option[Double] = None
-) derives Decoder, Encoder
+) derives ConfiguredDecoder, ConfiguredEncoder
 
 object AnnualReportDataEnums {
 

@@ -12,6 +12,7 @@
 package com.github.unknownnpc.masscaladon.generated.model
 
 import io.circe.{Decoder, Encoder}
+import io.circe.derivation.{ConfiguredDecoder, ConfiguredEncoder}
 import com.github.unknownnpc.masscaladon.generated.core.AdditionalTypeSerializers.given
 import com.github.unknownnpc.masscaladon.generated.core.DateSerializers.given
 
@@ -22,5 +23,5 @@ case class PostAccountFollowRequest(
   notification: Option[Boolean] = None,
   /* Receive this account's reblogs in home timeline? Defaults to true. */
   reblogs: Option[Boolean] = None
-) derives Decoder, Encoder
+) derives ConfiguredDecoder, ConfiguredEncoder
 

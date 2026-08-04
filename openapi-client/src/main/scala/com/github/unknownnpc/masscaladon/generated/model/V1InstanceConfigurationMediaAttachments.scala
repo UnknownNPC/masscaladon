@@ -12,6 +12,7 @@
 package com.github.unknownnpc.masscaladon.generated.model
 
 import io.circe.{Decoder, Encoder}
+import io.circe.derivation.{ConfiguredDecoder, ConfiguredEncoder}
 import com.github.unknownnpc.masscaladon.generated.core.AdditionalTypeSerializers.given
 import com.github.unknownnpc.masscaladon.generated.core.DateSerializers.given
 
@@ -31,5 +32,5 @@ case class V1InstanceConfigurationMediaAttachments(
   videoMatrixLimit: Int,
   /* The maximum size of any uploaded video, in bytes. */
   videoSizeLimit: Int
-) derives Decoder, Encoder
+) derives ConfiguredDecoder, ConfiguredEncoder
 

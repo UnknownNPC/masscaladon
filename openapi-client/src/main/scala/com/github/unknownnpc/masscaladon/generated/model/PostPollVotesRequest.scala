@@ -12,11 +12,12 @@
 package com.github.unknownnpc.masscaladon.generated.model
 
 import io.circe.{Decoder, Encoder}
+import io.circe.derivation.{ConfiguredDecoder, ConfiguredEncoder}
 import com.github.unknownnpc.masscaladon.generated.core.AdditionalTypeSerializers.given
 import com.github.unknownnpc.masscaladon.generated.core.DateSerializers.given
 
 case class PostPollVotesRequest(
   /* Provide your own votes as an index for each option (starting from 0). */
   choices: Seq[Int]
-) derives Decoder, Encoder
+) derives ConfiguredDecoder, ConfiguredEncoder
 

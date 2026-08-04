@@ -13,6 +13,7 @@ package com.github.unknownnpc.masscaladon.generated.model
 
 import java.time.OffsetDateTime
 import io.circe.{Decoder, Encoder}
+import io.circe.derivation.{ConfiguredDecoder, ConfiguredEncoder}
 import com.github.unknownnpc.masscaladon.generated.core.AdditionalTypeSerializers.given
 import com.github.unknownnpc.masscaladon.generated.core.DateSerializers.given
 
@@ -33,7 +34,7 @@ case class AccountWarning(
   appeal: Option[Appeal] = None,
   /* List of status IDs that are relevant to the warning. When `action` is `mark_statuses_as_sensitive` or `delete_statuses`, those are the affected statuses. If the action is `delete_statuses` then they have been irrevocably deleted (irrespective of the appeal state), and will be inaccessible to the client. */
   statusIds: Option[Seq[String]] = None
-) derives Decoder, Encoder
+) derives ConfiguredDecoder, ConfiguredEncoder
 
 object AccountWarningEnums {
 

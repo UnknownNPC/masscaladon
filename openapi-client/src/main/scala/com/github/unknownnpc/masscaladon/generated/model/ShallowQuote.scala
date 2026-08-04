@@ -13,6 +13,7 @@ package com.github.unknownnpc.masscaladon.generated.model
 
 import com.github.unknownnpc.masscaladon.generated.model.QuoteStateEnum._
 import io.circe.{Decoder, Encoder}
+import io.circe.derivation.{ConfiguredDecoder, ConfiguredEncoder}
 import com.github.unknownnpc.masscaladon.generated.core.AdditionalTypeSerializers.given
 import com.github.unknownnpc.masscaladon.generated.core.DateSerializers.given
 
@@ -24,7 +25,7 @@ case class ShallowQuote(
   state: QuoteStateEnum,
   /* The identifier of the status being quoted. This will be `null`, unless the `state` attribute is one of `accepted`, `blocked_account`, `blocked_domain` or `muted_account`, or the wrapping [Status]({{< relref \"entities/status\" >}}) entity has been obtained by calling `DELETE /api/v1/statuses/:id`. */
   quotedStatusId: Option[String] = None
-) derives Decoder, Encoder
+) derives ConfiguredDecoder, ConfiguredEncoder
 
 object ShallowQuoteEnums {
 

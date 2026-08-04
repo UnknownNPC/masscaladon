@@ -13,6 +13,7 @@ package com.github.unknownnpc.masscaladon.generated.model
 
 import java.net.URI
 import io.circe.{Decoder, Encoder}
+import io.circe.derivation.{ConfiguredDecoder, ConfiguredEncoder}
 import com.github.unknownnpc.masscaladon.generated.core.AdditionalTypeSerializers.given
 import com.github.unknownnpc.masscaladon.generated.core.DateSerializers.given
 
@@ -30,5 +31,5 @@ case class Reaction(
   staticUrl: Option[URI] = None,
   /* If the reaction is a custom emoji: A link to the custom emoji. */
   url: Option[URI] = None
-) derives Decoder, Encoder
+) derives ConfiguredDecoder, ConfiguredEncoder
 

@@ -13,6 +13,7 @@ package com.github.unknownnpc.masscaladon.generated.model
 
 import com.github.unknownnpc.masscaladon.generated.model.AsyncRefreshStatusEnum._
 import io.circe.{Decoder, Encoder}
+import io.circe.derivation.{ConfiguredDecoder, ConfiguredEncoder}
 import com.github.unknownnpc.masscaladon.generated.core.AdditionalTypeSerializers.given
 import com.github.unknownnpc.masscaladon.generated.core.DateSerializers.given
 
@@ -26,7 +27,7 @@ case class AsyncRefresh(
   status: AsyncRefreshStatusEnum,
   /* Optional number of results already created/fetched as part of this async refresh. */
   resultCount: Option[Int] = None
-) derives Decoder, Encoder
+) derives ConfiguredDecoder, ConfiguredEncoder
 
 object AsyncRefreshEnums {
 

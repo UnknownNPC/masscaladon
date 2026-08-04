@@ -6,6 +6,7 @@ import {{import}}
 {{/imports}}
 {{#circe}}
 import io.circe.{Decoder, Encoder}
+import io.circe.derivation.{ConfiguredDecoder, ConfiguredEncoder}
 import {{invokerPackage}}.AdditionalTypeSerializers.given
 import {{invokerPackage}}.DateSerializers.given
 {{/circe}}
@@ -28,7 +29,7 @@ case class {{classname}}(
   {{/description}}
   {{{name}}}: {{^required}}Option[{{/required}}{{^isEnum}}{{dataType}}{{/isEnum}}{{#isEnum}}{{^isArray}}{{classname}}Enums.{{datatypeWithEnum}}{{/isArray}}{{#isArray}}Seq[{{classname}}Enums.{{datatypeWithEnum}}]{{/isArray}}{{/isEnum}}{{^required}}] = None{{/required}}{{^-last}},{{/-last}}
   {{/vars}}
-){{#circe}} derives Decoder, Encoder{{/circe}}
+){{#circe}} derives ConfiguredDecoder, ConfiguredEncoder{{/circe}}
 {{/isEnum}}
 
 {{#isEnum}}

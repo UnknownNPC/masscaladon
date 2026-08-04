@@ -12,6 +12,7 @@
 package com.github.unknownnpc.masscaladon.generated.model
 
 import io.circe.{Decoder, Encoder}
+import io.circe.derivation.{ConfiguredDecoder, ConfiguredEncoder}
 import com.github.unknownnpc.masscaladon.generated.core.AdditionalTypeSerializers.given
 import com.github.unknownnpc.masscaladon.generated.core.DateSerializers.given
 
@@ -24,5 +25,5 @@ case class CreatePushSubscriptionRequestSubscription(
   endpoint: Option[String] = None,
   /* Follow standardized webpush (RFC8030+RFC8291+RFC8292) ? Else follow legacy webpush (unpublished version, 4th draft of RFC8291 and 1st draft of RFC8292). Defaults to false. */
   standard: Option[Boolean] = None
-) derives Decoder, Encoder
+) derives ConfiguredDecoder, ConfiguredEncoder
 

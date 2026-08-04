@@ -12,6 +12,7 @@
 package com.github.unknownnpc.masscaladon.generated.model
 
 import io.circe.{Decoder, Encoder}
+import io.circe.derivation.{ConfiguredDecoder, ConfiguredEncoder}
 import com.github.unknownnpc.masscaladon.generated.core.AdditionalTypeSerializers.given
 import com.github.unknownnpc.masscaladon.generated.core.DateSerializers.given
 
@@ -25,5 +26,5 @@ case class NotificationFallback(
   details: Option[String] = None,
   /* Localized fallback summary for the notification, for instance “You're on an app that does not support the most recent version of Mastodon. Sign in to the Mastodon web app for full functionality.” */
   summary: Option[String] = None
-) derives Decoder, Encoder
+) derives ConfiguredDecoder, ConfiguredEncoder
 

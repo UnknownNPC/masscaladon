@@ -13,6 +13,7 @@ package com.github.unknownnpc.masscaladon.generated.model
 
 import java.time.OffsetDateTime
 import io.circe.{Decoder, Encoder}
+import io.circe.derivation.{ConfiguredDecoder, ConfiguredEncoder}
 import com.github.unknownnpc.masscaladon.generated.core.AdditionalTypeSerializers.given
 import com.github.unknownnpc.masscaladon.generated.core.DateSerializers.given
 
@@ -28,5 +29,5 @@ case class AdminEmailDomainBlock(
   history: Seq[AdminEmailDomainBlockHistory],
   /* The ID of the EmailDomainBlock in the database. */
   id: String
-) derives Decoder, Encoder
+) derives ConfiguredDecoder, ConfiguredEncoder
 

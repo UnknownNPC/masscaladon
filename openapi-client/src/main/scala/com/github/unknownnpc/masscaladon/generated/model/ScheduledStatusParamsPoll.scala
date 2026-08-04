@@ -12,6 +12,7 @@
 package com.github.unknownnpc.masscaladon.generated.model
 
 import io.circe.{Decoder, Encoder}
+import io.circe.derivation.{ConfiguredDecoder, ConfiguredEncoder}
 import com.github.unknownnpc.masscaladon.generated.core.AdditionalTypeSerializers.given
 import com.github.unknownnpc.masscaladon.generated.core.DateSerializers.given
 
@@ -27,5 +28,5 @@ case class ScheduledStatusParamsPoll(
   multiple: Boolean,
   /* Whether the poll should hide total votes until after voting has ended. */
   hideTotals: Boolean
-) derives Decoder, Encoder
+) derives ConfiguredDecoder, ConfiguredEncoder
 

@@ -13,6 +13,7 @@ package com.github.unknownnpc.masscaladon.generated.model
 
 import java.net.URI
 import io.circe.{Decoder, Encoder}
+import io.circe.derivation.{ConfiguredDecoder, ConfiguredEncoder}
 import com.github.unknownnpc.masscaladon.generated.core.AdditionalTypeSerializers.given
 import com.github.unknownnpc.masscaladon.generated.core.DateSerializers.given
 
@@ -27,5 +28,5 @@ case class InstanceThumbnail(
   /* The thumbnail's alt text (a description of the image to help people with visual impairments understand its content). */
   description: Option[String] = None,
   versions: Option[InstanceThumbnailVersions] = None
-) derives Decoder, Encoder
+) derives ConfiguredDecoder, ConfiguredEncoder
 

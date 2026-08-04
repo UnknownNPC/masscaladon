@@ -14,6 +14,7 @@ package com.github.unknownnpc.masscaladon.generated.model
 import com.github.unknownnpc.masscaladon.generated.model.MediaAttachmentTypeEnum._
 import java.net.URI
 import io.circe.{Decoder, Encoder}
+import io.circe.derivation.{ConfiguredDecoder, ConfiguredEncoder}
 import com.github.unknownnpc.masscaladon.generated.core.AdditionalTypeSerializers.given
 import com.github.unknownnpc.masscaladon.generated.core.DateSerializers.given
 
@@ -36,7 +37,7 @@ case class MediaAttachment(
   remoteUrl: Option[URI] = None,
   /* The location of the original full-size attachment. Url may be null if the file is still being processed. See [`POST /api/v2/media`]({{< relref \"methods/media\" >}}#v2). */
   url: Option[URI] = None
-) derives Decoder, Encoder
+) derives ConfiguredDecoder, ConfiguredEncoder
 
 object MediaAttachmentEnums {
 

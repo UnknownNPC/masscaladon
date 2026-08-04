@@ -13,6 +13,7 @@ package com.github.unknownnpc.masscaladon.generated.model
 
 import com.github.unknownnpc.masscaladon.generated.model.AppealStateEnum._
 import io.circe.{Decoder, Encoder}
+import io.circe.derivation.{ConfiguredDecoder, ConfiguredEncoder}
 import com.github.unknownnpc.masscaladon.generated.core.AdditionalTypeSerializers.given
 import com.github.unknownnpc.masscaladon.generated.core.DateSerializers.given
 
@@ -24,7 +25,7 @@ case class Appeal(
   state: AppealStateEnum,
   /* Text of the appeal from the moderated account to the moderators. */
   text: String
-) derives Decoder, Encoder
+) derives ConfiguredDecoder, ConfiguredEncoder
 
 object AppealEnums {
 

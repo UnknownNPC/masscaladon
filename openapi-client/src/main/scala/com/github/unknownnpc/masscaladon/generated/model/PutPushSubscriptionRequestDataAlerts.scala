@@ -12,6 +12,7 @@
 package com.github.unknownnpc.masscaladon.generated.model
 
 import io.circe.{Decoder, Encoder}
+import io.circe.derivation.{ConfiguredDecoder, ConfiguredEncoder}
 import com.github.unknownnpc.masscaladon.generated.core.AdditionalTypeSerializers.given
 import com.github.unknownnpc.masscaladon.generated.core.DateSerializers.given
 
@@ -36,5 +37,5 @@ case class PutPushSubscriptionRequestDataAlerts(
   adminSignUp: Option[Boolean] = None,
   /* Receive new report notifications? Defaults to false. Must have a role with the appropriate permissions. */
   adminReport: Option[Boolean] = None
-) derives Decoder, Encoder
+) derives ConfiguredDecoder, ConfiguredEncoder
 

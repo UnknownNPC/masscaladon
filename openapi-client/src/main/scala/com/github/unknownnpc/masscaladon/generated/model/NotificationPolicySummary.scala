@@ -12,6 +12,7 @@
 package com.github.unknownnpc.masscaladon.generated.model
 
 import io.circe.{Decoder, Encoder}
+import io.circe.derivation.{ConfiguredDecoder, ConfiguredEncoder}
 import com.github.unknownnpc.masscaladon.generated.core.AdditionalTypeSerializers.given
 import com.github.unknownnpc.masscaladon.generated.core.DateSerializers.given
 
@@ -23,5 +24,5 @@ case class NotificationPolicySummary(
   pendingNotificationsCount: Int,
   /* Number of different accounts from which the user has non-dismissed filtered notifications. Capped at 100. */
   pendingRequestsCount: Int
-) derives Decoder, Encoder
+) derives ConfiguredDecoder, ConfiguredEncoder
 

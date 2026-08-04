@@ -13,13 +13,14 @@ package com.github.unknownnpc.masscaladon.generated.model
 
 import com.github.unknownnpc.masscaladon.generated.model.StatusVisibilityEnum._
 import io.circe.{Decoder, Encoder}
+import io.circe.derivation.{ConfiguredDecoder, ConfiguredEncoder}
 import com.github.unknownnpc.masscaladon.generated.core.AdditionalTypeSerializers.given
 import com.github.unknownnpc.masscaladon.generated.core.DateSerializers.given
 
 case class PostStatusReblogRequest(
   /* String (Enumerable, oneOf `public`, `unlisted`, or `private`). Defaults to public. */
   visibility: Option[StatusVisibilityEnum] = None
-) derives Decoder, Encoder
+) derives ConfiguredDecoder, ConfiguredEncoder
 
 object PostStatusReblogRequestEnums {
 

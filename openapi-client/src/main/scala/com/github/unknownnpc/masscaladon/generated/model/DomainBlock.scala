@@ -13,6 +13,7 @@ package com.github.unknownnpc.masscaladon.generated.model
 
 import com.github.unknownnpc.masscaladon.generated.model.DomainBlockSeverityEnum._
 import io.circe.{Decoder, Encoder}
+import io.circe.derivation.{ConfiguredDecoder, ConfiguredEncoder}
 import com.github.unknownnpc.masscaladon.generated.core.AdditionalTypeSerializers.given
 import com.github.unknownnpc.masscaladon.generated.core.DateSerializers.given
 
@@ -28,7 +29,7 @@ case class DomainBlock(
   severity: DomainBlockSeverityEnum,
   /* An optional reason for the domain block. */
   comment: Option[String] = None
-) derives Decoder, Encoder
+) derives ConfiguredDecoder, ConfiguredEncoder
 
 object DomainBlockEnums {
 

@@ -14,6 +14,7 @@ package com.github.unknownnpc.masscaladon.generated.model
 import com.github.unknownnpc.masscaladon.generated.model.PreferencesReadingExpandMediaEnum._
 import com.github.unknownnpc.masscaladon.generated.model.StatusVisibilityEnum._
 import io.circe.{Decoder, Encoder}
+import io.circe.derivation.{ConfiguredDecoder, ConfiguredEncoder}
 import com.github.unknownnpc.masscaladon.generated.core.AdditionalTypeSerializers.given
 import com.github.unknownnpc.masscaladon.generated.core.DateSerializers.given
 
@@ -31,7 +32,7 @@ case class Preferences(
   readingexpandspoilers: Boolean,
   /* Default language for new posts. Equivalent to [CredentialAccount#source\\[language\\]]({{< relref \"entities/Account#source-language\" >}}) */
   postingdefaultlanguage: Option[String] = None
-) derives Decoder, Encoder
+) derives ConfiguredDecoder, ConfiguredEncoder
 
 object PreferencesEnums {
 

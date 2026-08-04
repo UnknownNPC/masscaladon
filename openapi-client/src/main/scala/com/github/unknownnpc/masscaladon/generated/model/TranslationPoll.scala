@@ -12,6 +12,7 @@
 package com.github.unknownnpc.masscaladon.generated.model
 
 import io.circe.{Decoder, Encoder}
+import io.circe.derivation.{ConfiguredDecoder, ConfiguredEncoder}
 import com.github.unknownnpc.masscaladon.generated.core.AdditionalTypeSerializers.given
 import com.github.unknownnpc.masscaladon.generated.core.DateSerializers.given
 
@@ -23,5 +24,5 @@ case class TranslationPoll(
   id: String,
   /* The translated poll options. */
   options: Seq[TranslationPollOption]
-) derives Decoder, Encoder
+) derives ConfiguredDecoder, ConfiguredEncoder
 

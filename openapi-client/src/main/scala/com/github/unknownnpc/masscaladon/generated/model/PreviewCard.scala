@@ -14,6 +14,7 @@ package com.github.unknownnpc.masscaladon.generated.model
 import com.github.unknownnpc.masscaladon.generated.model.TrendsLinkTypeEnum._
 import java.net.URI
 import io.circe.{Decoder, Encoder}
+import io.circe.derivation.{ConfiguredDecoder, ConfiguredEncoder}
 import com.github.unknownnpc.masscaladon.generated.core.AdditionalTypeSerializers.given
 import com.github.unknownnpc.masscaladon.generated.core.DateSerializers.given
 
@@ -53,7 +54,7 @@ case class PreviewCard(
   image: Option[URI] = None,
   /* True if the linked article claims to be written by the current user without the user having the article's domain in their [`attribution_domains`]({{< relref \"entities/Account#source[attribution_domains]\" >}})). This is used to prompt them to review and add the domain. */
   missingAttribution: Option[Boolean] = None
-) derives Decoder, Encoder
+) derives ConfiguredDecoder, ConfiguredEncoder
 
 object PreviewCardEnums {
 

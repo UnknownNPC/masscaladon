@@ -14,6 +14,7 @@ package com.github.unknownnpc.masscaladon.generated.model
 import com.github.unknownnpc.masscaladon.generated.model.CollectionItemStateEnum._
 import java.time.OffsetDateTime
 import io.circe.{Decoder, Encoder}
+import io.circe.derivation.{ConfiguredDecoder, ConfiguredEncoder}
 import com.github.unknownnpc.masscaladon.generated.core.AdditionalTypeSerializers.given
 import com.github.unknownnpc.masscaladon.generated.core.DateSerializers.given
 
@@ -29,7 +30,7 @@ case class CollectionItem(
   state: CollectionItemStateEnum,
   /* The id of the account this item represents. */
   accountId: Option[String] = None
-) derives Decoder, Encoder
+) derives ConfiguredDecoder, ConfiguredEncoder
 
 object CollectionItemEnums {
 

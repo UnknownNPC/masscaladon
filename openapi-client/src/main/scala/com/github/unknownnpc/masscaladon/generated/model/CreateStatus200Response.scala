@@ -15,6 +15,7 @@ import com.github.unknownnpc.masscaladon.generated.model.StatusVisibilityEnum._
 import java.net.URI
 import java.time.OffsetDateTime
 import io.circe.{Decoder, Encoder}
+import io.circe.derivation.{ConfiguredDecoder, ConfiguredEncoder}
 import com.github.unknownnpc.masscaladon.generated.core.AdditionalTypeSerializers.given
 import com.github.unknownnpc.masscaladon.generated.core.DateSerializers.given
 
@@ -86,7 +87,7 @@ case class CreateStatus200Response(
   params: ScheduledStatusParams,
   /* The timestamp for when the status will be posted. */
   scheduledAt: OffsetDateTime
-) derives Decoder, Encoder
+) derives ConfiguredDecoder, ConfiguredEncoder
 
 object CreateStatus200ResponseEnums {
 

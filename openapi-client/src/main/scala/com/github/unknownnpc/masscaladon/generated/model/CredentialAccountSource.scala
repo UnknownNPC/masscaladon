@@ -14,6 +14,7 @@ package com.github.unknownnpc.masscaladon.generated.model
 import com.github.unknownnpc.masscaladon.generated.model.CredentialAccountSourceQuotePolicyEnum._
 import com.github.unknownnpc.masscaladon.generated.model.StatusVisibilityEnum._
 import io.circe.{Decoder, Encoder}
+import io.circe.derivation.{ConfiguredDecoder, ConfiguredEncoder}
 import com.github.unknownnpc.masscaladon.generated.core.AdditionalTypeSerializers.given
 import com.github.unknownnpc.masscaladon.generated.core.DateSerializers.given
 
@@ -43,7 +44,7 @@ case class CredentialAccountSource(
   language: Option[String] = None,
   /* The default quote policy to be used for new statuses. */
   quotePolicy: Option[CredentialAccountSourceQuotePolicyEnum] = None
-) derives Decoder, Encoder
+) derives ConfiguredDecoder, ConfiguredEncoder
 
 object CredentialAccountSourceEnums {
 

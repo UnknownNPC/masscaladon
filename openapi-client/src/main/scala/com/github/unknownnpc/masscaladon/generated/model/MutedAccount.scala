@@ -15,6 +15,7 @@ import java.net.URI
 import java.time.LocalDate
 import java.time.OffsetDateTime
 import io.circe.{Decoder, Encoder}
+import io.circe.derivation.{ConfiguredDecoder, ConfiguredEncoder}
 import com.github.unknownnpc.masscaladon.generated.core.AdditionalTypeSerializers.given
 import com.github.unknownnpc.masscaladon.generated.core.DateSerializers.given
 
@@ -94,5 +95,5 @@ case class MutedAccount(
   suspended: Option[Boolean] = None,
   /* The location of the user's profile page (web interface URL). */
   url: Option[URI] = None
-) derives Decoder, Encoder
+) derives ConfiguredDecoder, ConfiguredEncoder
 

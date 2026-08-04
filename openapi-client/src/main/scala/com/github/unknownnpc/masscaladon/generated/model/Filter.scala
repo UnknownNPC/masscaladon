@@ -15,6 +15,7 @@ import com.github.unknownnpc.masscaladon.generated.model.FilterContextEnum._
 import com.github.unknownnpc.masscaladon.generated.model.FilterFilterActionEnum._
 import java.time.OffsetDateTime
 import io.circe.{Decoder, Encoder}
+import io.circe.derivation.{ConfiguredDecoder, ConfiguredEncoder}
 import com.github.unknownnpc.masscaladon.generated.core.AdditionalTypeSerializers.given
 import com.github.unknownnpc.masscaladon.generated.core.DateSerializers.given
 
@@ -36,7 +37,7 @@ case class Filter(
   keywords: Option[Seq[FilterKeyword]] = None,
   /* The statuses grouped under this filter. Omitted when part of a [FilterResult]({{< relref \"entities/FilterResult\" >}}). */
   statuses: Option[Seq[FilterStatus]] = None
-) derives Decoder, Encoder
+) derives ConfiguredDecoder, ConfiguredEncoder
 
 object FilterEnums {
 

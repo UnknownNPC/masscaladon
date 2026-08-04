@@ -13,6 +13,7 @@ package com.github.unknownnpc.masscaladon.generated.model
 
 import com.github.unknownnpc.masscaladon.generated.model.StatusVisibilityEnum._
 import io.circe.{Decoder, Encoder}
+import io.circe.derivation.{ConfiguredDecoder, ConfiguredEncoder}
 import com.github.unknownnpc.masscaladon.generated.core.AdditionalTypeSerializers.given
 import com.github.unknownnpc.masscaladon.generated.core.DateSerializers.given
 
@@ -43,7 +44,7 @@ case class ScheduledStatusParams(
   sensitive: Option[Boolean] = None,
   /* The text of the content warning or summary for the status. */
   spoilerText: Option[String] = None
-) derives Decoder, Encoder
+) derives ConfiguredDecoder, ConfiguredEncoder
 
 object ScheduledStatusParamsEnums {
 

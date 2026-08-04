@@ -41,15 +41,31 @@ object JsonSupport extends SttpJson4sApi {
 }
 {{/json4s}}
 {{#circe}}
-import io.circe.Encoder
-import sttp.client3.RequestT
+import io.circe.{Encoder, Printer}
+import sttp.client3.{BodySerializer, RequestT, StringBody}
 import sttp.client3.circe.SttpCirceApi
+import sttp.model.MediaType
 
 // Each model in {{modelPackage}} derives its own Encoder/Decoder (Scala 3
 // `derives` clause), so JsonSupport only needs to provide the sttp/circe
 // request and response bodies (`asJson`, `asJsonAlways`, ...); the codecs
 // themselves live next to the types they serialize.
 object JsonSupport extends SttpCirceApi {
+
+  // Several request models are one case class shared across multiple oneOf variants of an
+  // endpoint (the openapi-generator flattens `oneOf` request bodies into a single class,
+  // unioning each variant's required fields), so fields that only apply to one variant end
+  // up with a non-optional placeholder value (e.g. `CreateStatusRequest.poll`) instead of
+  // being absent. dropNullValues turns unset (null-valued) fields into omitted keys, and
+  // recursively empties objects made of nothing but such fields (e.g. an unused
+  // `poll: {}`), which Mastodon's Rails backend treats as blank/absent rather than a
+  // present-but-invalid value — so this must stay overridden even after the client is
+  // regenerated.
+  override implicit def circeBodySerializer[B](implicit
+      encoder: Encoder[B],
+      printer: Printer = Printer.noSpaces.copy(dropNullValues = true)
+  ): BodySerializer[B] =
+    b => StringBody(encoder(b).printWith(printer), "utf-8", MediaType.ApplicationJson)
 
   // Attaches a JSON body only when present; a request with no body should
   // not carry a serialized `null`. Encoding B directly (rather than summoning

@@ -12,6 +12,7 @@
 package com.github.unknownnpc.masscaladon.generated.model
 
 import io.circe.{Decoder, Encoder}
+import io.circe.derivation.{ConfiguredDecoder, ConfiguredEncoder}
 import com.github.unknownnpc.masscaladon.generated.core.AdditionalTypeSerializers.given
 import com.github.unknownnpc.masscaladon.generated.core.DateSerializers.given
 
@@ -25,5 +26,5 @@ case class AdminEmailDomainBlockHistory(
   day: String,
   /* The counted IP signup attempts of that email domain within that day. */
   uses: String
-) derives Decoder, Encoder
+) derives ConfiguredDecoder, ConfiguredEncoder
 

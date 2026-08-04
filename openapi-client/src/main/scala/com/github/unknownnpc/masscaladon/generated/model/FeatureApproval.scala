@@ -15,6 +15,7 @@ import com.github.unknownnpc.masscaladon.generated.model.FeatureApprovalAutomati
 import com.github.unknownnpc.masscaladon.generated.model.FeatureApprovalCurrentUserEnum._
 import com.github.unknownnpc.masscaladon.generated.model.QuoteApprovalAutomaticEnum._
 import io.circe.{Decoder, Encoder}
+import io.circe.derivation.{ConfiguredDecoder, ConfiguredEncoder}
 import com.github.unknownnpc.masscaladon.generated.core.AdditionalTypeSerializers.given
 import com.github.unknownnpc.masscaladon.generated.core.DateSerializers.given
 
@@ -28,7 +29,7 @@ case class FeatureApproval(
   currentUser: FeatureApprovalCurrentUserEnum,
   /* Describes who is expected to have attempts of featuring this account in a Collection be manually reviewed by the account owner before being accepted. An empty list means that nobody is expected to be able to feature this account with manual approval. Other values may be added in the future, so unknown values should be treated as `unsupported_policy`. */
   manual: Seq[QuoteApprovalAutomaticEnum]
-) derives Decoder, Encoder
+) derives ConfiguredDecoder, ConfiguredEncoder
 
 object FeatureApprovalEnums {
 

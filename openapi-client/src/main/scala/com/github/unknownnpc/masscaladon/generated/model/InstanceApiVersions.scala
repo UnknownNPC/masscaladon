@@ -12,6 +12,7 @@
 package com.github.unknownnpc.masscaladon.generated.model
 
 import io.circe.{Decoder, Encoder}
+import io.circe.derivation.{ConfiguredDecoder, ConfiguredEncoder}
 import com.github.unknownnpc.masscaladon.generated.core.AdditionalTypeSerializers.given
 import com.github.unknownnpc.masscaladon.generated.core.DateSerializers.given
 
@@ -21,5 +22,5 @@ import com.github.unknownnpc.masscaladon.generated.core.DateSerializers.given
 case class InstanceApiVersions(
   /* API version number that increments with substantial API changes. Clients can use this value to determine API compatibility rather than parsing complex version strings like \"4.4+hometown-123\" from forks or nightly builds. This number increases independently of the human-readable version number. */
   mastodon: Option[Int] = None
-) derives Decoder, Encoder
+) derives ConfiguredDecoder, ConfiguredEncoder
 

@@ -13,6 +13,7 @@ package com.github.unknownnpc.masscaladon.generated.model
 
 import com.github.unknownnpc.masscaladon.generated.model.FilterContextEnum._
 import io.circe.{Decoder, Encoder}
+import io.circe.derivation.{ConfiguredDecoder, ConfiguredEncoder}
 import com.github.unknownnpc.masscaladon.generated.core.AdditionalTypeSerializers.given
 import com.github.unknownnpc.masscaladon.generated.core.DateSerializers.given
 
@@ -27,5 +28,5 @@ case class CreateFilterV2Request(
   filterAction: Option[String] = None,
   /* Array of objects with properties: keyword, whole_word, id, _destroy */
   keywordsAttributes: Option[Seq[CreateFilterV2RequestKeywordsAttributesInner]] = None
-) derives Decoder, Encoder
+) derives ConfiguredDecoder, ConfiguredEncoder
 

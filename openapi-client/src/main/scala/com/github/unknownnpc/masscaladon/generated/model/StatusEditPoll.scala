@@ -12,6 +12,7 @@
 package com.github.unknownnpc.masscaladon.generated.model
 
 import io.circe.{Decoder, Encoder}
+import io.circe.derivation.{ConfiguredDecoder, ConfiguredEncoder}
 import com.github.unknownnpc.masscaladon.generated.core.AdditionalTypeSerializers.given
 import com.github.unknownnpc.masscaladon.generated.core.DateSerializers.given
 
@@ -21,5 +22,5 @@ import com.github.unknownnpc.masscaladon.generated.core.DateSerializers.given
 case class StatusEditPoll(
   /* The poll options at this revision. */
   options: Seq[StatusEditPollOptionsInner]
-) derives Decoder, Encoder
+) derives ConfiguredDecoder, ConfiguredEncoder
 

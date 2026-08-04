@@ -12,6 +12,7 @@
 package com.github.unknownnpc.masscaladon.generated.model
 
 import io.circe.{Decoder, Encoder}
+import io.circe.derivation.{ConfiguredDecoder, ConfiguredEncoder}
 import com.github.unknownnpc.masscaladon.generated.core.AdditionalTypeSerializers.given
 import com.github.unknownnpc.masscaladon.generated.core.DateSerializers.given
 
@@ -23,5 +24,5 @@ case class ValidationError(
   error: String,
   /* Detailed validation errors for each field. */
   details: Map[String, Seq[ValidationErrorDetailsValueInner]]
-) derives Decoder, Encoder
+) derives ConfiguredDecoder, ConfiguredEncoder
 

@@ -14,6 +14,7 @@ package com.github.unknownnpc.masscaladon.generated.model
 import java.net.URI
 import java.time.LocalDate
 import io.circe.{Decoder, Encoder}
+import io.circe.derivation.{ConfiguredDecoder, ConfiguredEncoder}
 import com.github.unknownnpc.masscaladon.generated.core.AdditionalTypeSerializers.given
 import com.github.unknownnpc.masscaladon.generated.core.DateSerializers.given
 
@@ -31,5 +32,5 @@ case class FeaturedTag(
   url: URI,
   /* The date of the last authored status containing this hashtag. */
   lastStatusAt: Option[LocalDate] = None
-) derives Decoder, Encoder
+) derives ConfiguredDecoder, ConfiguredEncoder
 

@@ -12,6 +12,7 @@
 package com.github.unknownnpc.masscaladon.generated.model
 
 import io.circe.{Decoder, Encoder}
+import io.circe.derivation.{ConfiguredDecoder, ConfiguredEncoder}
 import com.github.unknownnpc.masscaladon.generated.core.AdditionalTypeSerializers.given
 import com.github.unknownnpc.masscaladon.generated.core.DateSerializers.given
 
@@ -23,7 +24,7 @@ case class InstanceConfigurationTimelinesAccessTrendingLinkFeeds(
   local: Option[InstanceConfigurationTimelinesAccessTrendingLinkFeedsEnums.Local] = None,
   /* Access restrictions for remote posts in trending link feeds. */
   remote: Option[InstanceConfigurationTimelinesAccessTrendingLinkFeedsEnums.Remote] = None
-) derives Decoder, Encoder
+) derives ConfiguredDecoder, ConfiguredEncoder
 
 object InstanceConfigurationTimelinesAccessTrendingLinkFeedsEnums {
 

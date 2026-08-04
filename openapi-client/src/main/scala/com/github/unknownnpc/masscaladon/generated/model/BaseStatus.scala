@@ -14,6 +14,7 @@ package com.github.unknownnpc.masscaladon.generated.model
 import com.github.unknownnpc.masscaladon.generated.model.StatusVisibilityEnum._
 import java.time.OffsetDateTime
 import io.circe.{Decoder, Encoder}
+import io.circe.derivation.{ConfiguredDecoder, ConfiguredEncoder}
 import com.github.unknownnpc.masscaladon.generated.core.AdditionalTypeSerializers.given
 import com.github.unknownnpc.masscaladon.generated.core.DateSerializers.given
 
@@ -37,7 +38,7 @@ case class BaseStatus(
   spoilerText: Option[String] = None,
   /* Sets the visibility of the posted status to `public`, `unlisted`, `private`, `direct`. */
   visibility: Option[StatusVisibilityEnum] = None
-) derives Decoder, Encoder
+) derives ConfiguredDecoder, ConfiguredEncoder
 
 object BaseStatusEnums {
 

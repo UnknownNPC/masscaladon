@@ -12,6 +12,7 @@
 package com.github.unknownnpc.masscaladon.generated.model
 
 import io.circe.{Decoder, Encoder}
+import io.circe.derivation.{ConfiguredDecoder, ConfiguredEncoder}
 import com.github.unknownnpc.masscaladon.generated.core.AdditionalTypeSerializers.given
 import com.github.unknownnpc.masscaladon.generated.core.DateSerializers.given
 
@@ -25,5 +26,5 @@ case class InstanceConfigurationStatuses(
   maxCharacters: Int,
   /* The maximum number of media attachments that can be added to a status. */
   maxMediaAttachments: Int
-) derives Decoder, Encoder
+) derives ConfiguredDecoder, ConfiguredEncoder
 

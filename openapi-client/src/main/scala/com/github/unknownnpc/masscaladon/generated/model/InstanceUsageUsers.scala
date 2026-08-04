@@ -12,6 +12,7 @@
 package com.github.unknownnpc.masscaladon.generated.model
 
 import io.circe.{Decoder, Encoder}
+import io.circe.derivation.{ConfiguredDecoder, ConfiguredEncoder}
 import com.github.unknownnpc.masscaladon.generated.core.AdditionalTypeSerializers.given
 import com.github.unknownnpc.masscaladon.generated.core.DateSerializers.given
 
@@ -21,5 +22,5 @@ import com.github.unknownnpc.masscaladon.generated.core.DateSerializers.given
 case class InstanceUsageUsers(
   /* The number of active users in the past 4 weeks. This is set to zero for server with `configuration[limited_federation]`. */
   activeMonth: Int
-) derives Decoder, Encoder
+) derives ConfiguredDecoder, ConfiguredEncoder
 

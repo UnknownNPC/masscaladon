@@ -12,6 +12,7 @@
 package com.github.unknownnpc.masscaladon.generated.model
 
 import io.circe.{Decoder, Encoder}
+import io.circe.derivation.{ConfiguredDecoder, ConfiguredEncoder}
 import com.github.unknownnpc.masscaladon.generated.core.AdditionalTypeSerializers.given
 import com.github.unknownnpc.masscaladon.generated.core.DateSerializers.given
 
@@ -28,5 +29,5 @@ case class V1NotificationPolicy(
   /* Whether to filter notifications from private mentions. Replies to private mentions initiated by the user, as well as accounts the user follows, are never filtered. */
   filterPrivateMentions: Boolean,
   summary: NotificationPolicySummary
-) derives Decoder, Encoder
+) derives ConfiguredDecoder, ConfiguredEncoder
 

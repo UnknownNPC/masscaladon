@@ -13,6 +13,7 @@ package com.github.unknownnpc.masscaladon.generated.model
 
 import java.net.URI
 import io.circe.{Decoder, Encoder}
+import io.circe.derivation.{ConfiguredDecoder, ConfiguredEncoder}
 import com.github.unknownnpc.masscaladon.generated.core.AdditionalTypeSerializers.given
 import com.github.unknownnpc.masscaladon.generated.core.DateSerializers.given
 
@@ -22,5 +23,5 @@ import com.github.unknownnpc.masscaladon.generated.core.DateSerializers.given
 case class V1InstanceUrls(
   /* The Websockets URL for connecting to the streaming API. */
   streamingApi: URI
-) derives Decoder, Encoder
+) derives ConfiguredDecoder, ConfiguredEncoder
 
