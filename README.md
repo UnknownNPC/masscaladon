@@ -1,5 +1,7 @@
 # masscaladon
 
+[![Maven Central](https://img.shields.io/maven-central/v/com.github.unknownnpc/masscaladon-client_3.svg)](https://central.sonatype.com/artifact/com.github.unknownnpc/masscaladon-client_3/overview)
+
 A Scala 3 client for the [Mastodon](https://joinmastodon.org/) API, built on
 [sttp](https://sttp.softwaremill.com/) and [circe](https://circe.github.io/circe/),
 with an idiomatic Scala 3 surface: `derives`-based type classes for every
