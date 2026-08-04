@@ -1,0 +1,33 @@
+generatorName: scala-sttp
+
+outputDir: .
+
+additionalProperties:
+  dateLibrary: java8
+  enumUnknownDefaultCase: "true"
+  jsonLibrary: circe
+  mainPackage: com.github.unknownnpc.masscaladon.generated
+
+globalProperties:
+  supportingFiles: AdditionalTypeSerializers.scala,DateSerializers.scala,JsonSupport.scala
+  apis: ""
+  models: ""
+  apiTests: "false"
+  modelTests: "false"
+  apiDocs: "false"
+  modelDocs: "false"
+
+typeMappings:
+  ListRepliesPolicyEnum: String
+  AccountWarningActionEnum: String
+  List: List[String]
+  object: io.circe.Json
+
+importMappings:
+  "List[String]": scala.collection.immutable.List
+
+nameMappings:
+  notify: notification
+
+parameterNameMappings:
+  notify: notification

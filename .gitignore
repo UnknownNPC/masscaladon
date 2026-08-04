@@ -1,0 +1,21 @@
+# sbt / Scala
+**/target
+.bsp
+
+# IDEs
+.idea
+.vscode
+*.iml
+
+# Metals / Bloop
+.bloop
+.metals
+metals.sbt
+
+# Claude Code local settings (per-user, not shared)
+.claude/
+
+# openapi-generator scratch output (only produced by ad-hoc CLI runs,
+# not by the `generateClient` sbt task)
+openapi-client/.openapi-generator
+openapi-client/project

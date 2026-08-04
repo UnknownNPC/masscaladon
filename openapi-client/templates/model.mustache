@@ -1,0 +1,73 @@
+{{>licenseInfo}}
+package {{package}}
+
+{{#imports}}
+import {{import}}
+{{/imports}}
+{{#circe}}
+import io.circe.{Decoder, Encoder}
+import {{invokerPackage}}.AdditionalTypeSerializers.given
+import {{invokerPackage}}.DateSerializers.given
+{{/circe}}
+
+{{#models}}
+{{#model}}
+{{#description}}
+{{#javadocRenderer}}
+{{#title}}
+{{{.}}}
+{{/title}}
+{{{description}}}
+{{/javadocRenderer}}
+{{/description}}
+{{^isEnum}}
+case class {{classname}}(
+  {{#vars}}
+  {{#description}}
+  /* {{{.}}} */
+  {{/description}}
+  {{{name}}}: {{^required}}Option[{{/required}}{{^isEnum}}{{dataType}}{{/isEnum}}{{#isEnum}}{{^isArray}}{{classname}}Enums.{{datatypeWithEnum}}{{/isArray}}{{#isArray}}Seq[{{classname}}Enums.{{datatypeWithEnum}}]{{/isArray}}{{/isEnum}}{{^required}}] = None{{/required}}{{^-last}},{{/-last}}
+  {{/vars}}
+){{#circe}} derives Decoder, Encoder{{/circe}}
+{{/isEnum}}
+
+{{#isEnum}}
+object {{classname}} extends Enumeration {
+    type {{classname}} = {{classname}}.Value
+{{#allowableValues}}
+    {{#values}}
+    val {{#fnEnumEntry}}{{.}}{{/fnEnumEntry}} = Value("{{.}}")
+    {{/values}}
+{{/allowableValues}}
+}
+{{#circe}}
+given {{classname}}Decoder: Decoder[{{classname}}.{{classname}}] = Decoder.decodeEnumeration({{classname}})
+given {{classname}}Encoder: Encoder[{{classname}}.{{classname}}] = Encoder.encodeEnumeration({{classname}})
+{{/circe}}
+{{/isEnum}}
+{{#hasEnums}}
+object {{classname}}Enums {
+
+  {{#vars}}
+  {{#isEnum}}
+  type {{datatypeWithEnum}} = {{datatypeWithEnum}}.Value
+  {{/isEnum}}
+  {{/vars}}
+  {{#vars}}
+  {{#isEnum}}
+  object {{datatypeWithEnum}} extends Enumeration {
+{{#_enum}}
+    val {{#fnEnumEntry}}{{.}}{{/fnEnumEntry}} = Value("{{.}}")
+{{/_enum}}
+  }
+{{#circe}}
+  given {{datatypeWithEnum}}Decoder: Decoder[{{datatypeWithEnum}}] = Decoder.decodeEnumeration({{datatypeWithEnum}})
+  given {{datatypeWithEnum}}Encoder: Encoder[{{datatypeWithEnum}}] = Encoder.encodeEnumeration({{datatypeWithEnum}})
+{{/circe}}
+
+  {{/isEnum}}
+  {{/vars}}
+}
+{{/hasEnums}}
+{{/model}}
+{{/models}}
