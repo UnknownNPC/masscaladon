@@ -21,11 +21,6 @@ sbt compile   # builds both modules; spec + generated client are already committ
 sbt test
 ```
 
-`Masscaladon` is purely a request *executor* — it holds your auth token and
-`baseUrl` and runs requests, nothing more. Requests are built independently,
-with no client and no host attached, via `Requests` (every generated `*Api`
-object in one place):
-
 ```scala
 import scala.concurrent.ExecutionContext
 
