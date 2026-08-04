@@ -23,7 +23,7 @@ case class UpdateStatusRequest(
   mediaAttributes: Option[Seq[String]] = None,
   /* Include Attachment IDs to be attached as media. If provided, `status` becomes optional, and `poll` cannot be used. */
   mediaIds: Option[Seq[String]] = None,
-  poll: Option[UpdateStatusRequestPoll] = None,
+  poll: Option[CreateStatusRequestPoll] = None,
   /* String (Enumerable, oneOf). Sets who is allowed to quote the status. Ignored if `visibility` is `private` or `direct`, in which case the policy will always be set to `nobody`. Changing the policy does not invalidate past quotes. */
   quoteApprovalPolicy: Option[String] = None,
   /* Whether the status should be marked as sensitive. */

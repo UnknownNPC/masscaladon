@@ -11,22 +11,19 @@
  */
 package com.github.unknownnpc.masscaladon.generated.model
 
-import java.time.OffsetDateTime
+import java.net.URI
 import io.circe.{Decoder, Encoder}
 import io.circe.derivation.{ConfiguredDecoder, ConfiguredEncoder}
 import com.github.unknownnpc.masscaladon.generated.core.AdditionalTypeSerializers.given
 import com.github.unknownnpc.masscaladon.generated.core.DateSerializers.given
 
   /**
-   * Represents a status that will be published at a future scheduled date.
+   * The application used to post this status.
    */
-case class ScheduledStatus(
-  /* ID of the scheduled status in the database. */
-  id: String,
-  /* Media that will be attached when the status is posted. */
-  mediaAttachments: Seq[MediaAttachment],
-  params: CreateStatus200ResponseParams,
-  /* The timestamp for when the status will be posted. */
-  scheduledAt: OffsetDateTime
+case class CreateStatus200ResponseApplication(
+  /* The name of the application that posted this status. */
+  name: String,
+  /* The website associated with the application that posted this status. */
+  website: Option[URI] = None
 ) derives ConfiguredDecoder, ConfiguredEncoder
 

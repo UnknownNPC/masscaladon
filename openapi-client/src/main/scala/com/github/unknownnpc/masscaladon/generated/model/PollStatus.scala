@@ -38,7 +38,7 @@ case class PollStatus(
   spoilerText: Option[String] = None,
   /* Sets the visibility of the posted status to `public`, `unlisted`, `private`, `direct`. */
   visibility: Option[StatusVisibilityEnum] = None,
-  poll: UpdateStatusRequestPoll,
+  poll: CreateStatusRequestPoll,
   /* The text content of the status. If `media_ids` is provided, this becomes optional. Attaching a `poll` is optional while `status` is provided. */
   status: Option[String] = None
 ) derives ConfiguredDecoder, ConfiguredEncoder

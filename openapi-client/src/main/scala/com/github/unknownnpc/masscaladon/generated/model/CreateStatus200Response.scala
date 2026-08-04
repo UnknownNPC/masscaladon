@@ -20,37 +20,40 @@ import com.github.unknownnpc.masscaladon.generated.core.AdditionalTypeSerializer
 import com.github.unknownnpc.masscaladon.generated.core.DateSerializers.given
 
 case class CreateStatus200Response(
-  /* The account that authored this status. */
-  account: Account,
-  /* HTML-encoded status content. */
-  content: String,
-  /* The date when this status was created. */
-  createdAt: OffsetDateTime,
-  /* Custom emoji to be used when rendering status content. */
-  emojis: Seq[CustomEmoji],
-  /* How many favourites this status has received. */
-  favouritesCount: Int,
   /* ID of the scheduled status in the database. */
   id: String,
   /* Media that will be attached when the status is posted. */
   mediaAttachments: Seq[MediaAttachment],
+  params: Option[CreateStatus200ResponseParams] = None,
+  /* The timestamp for when the status will be posted. */
+  scheduledAt: Option[OffsetDateTime] = None,
+  /* The account that authored this status. */
+  account: Option[Account] = None,
+  /* HTML-encoded status content. */
+  content: Option[String] = None,
+  /* The date when this status was created. */
+  createdAt: Option[OffsetDateTime] = None,
+  /* Custom emoji to be used when rendering status content. */
+  emojis: Option[Seq[CustomEmoji]] = None,
+  /* How many favourites this status has received. */
+  favouritesCount: Option[Int] = None,
   /* Mentions of users within the status content. */
-  mentions: Seq[StatusMention],
+  mentions: Option[Seq[StatusMention]] = None,
   /* How many boosts this status has received. */
-  reblogsCount: Int,
+  reblogsCount: Option[Int] = None,
   /* How many replies this status has received. */
-  repliesCount: Int,
+  repliesCount: Option[Int] = None,
   /* Is this status marked as sensitive content? */
-  sensitive: Boolean,
+  sensitive: Option[Boolean] = None,
   /* Subject or summary line, below which status content is collapsed until expanded. */
-  spoilerText: String,
+  spoilerText: Option[String] = None,
   /* Hashtags used within the status content. */
-  tags: Seq[StatusTag],
+  tags: Option[Seq[StatusTag]] = None,
   /* URI of the status used for federation. */
-  uri: String,
+  uri: Option[String] = None,
   /* Visibility of this status. */
-  visibility: StatusVisibilityEnum,
-  application: Option[StatusApplication] = None,
+  visibility: Option[StatusVisibilityEnum] = None,
+  application: Option[CreateStatus200ResponseApplication] = None,
   /* If the current token has an authorized user: Have you bookmarked this status? */
   bookmarked: Option[Boolean] = None,
   card: Option[PreviewCard] = None,
@@ -71,7 +74,7 @@ case class CreateStatus200Response(
   /* If the current token has an authorized user: Have you pinned this status? Only appears if the status is pinnable. */
   pinned: Option[Boolean] = None,
   poll: Option[Poll] = None,
-  quote: Option[StatusQuote] = None,
+  quote: Option[CreateStatus200ResponseQuote] = None,
   quoteApproval: Option[QuoteApproval] = None,
   /* How many accepted quotes this status has. */
   quotesCount: Option[Int] = None,
@@ -83,10 +86,7 @@ case class CreateStatus200Response(
   /* Plain-text source of a status. Returned instead of `content` when status is deleted, so the user may redraft from the source text without the client having to reverse-engineer the original text from the HTML content. */
   text: Option[String] = None,
   /* A link to the status's HTML representation. */
-  url: Option[URI] = None,
-  params: ScheduledStatusParams,
-  /* The timestamp for when the status will be posted. */
-  scheduledAt: OffsetDateTime
+  url: Option[URI] = None
 ) derives ConfiguredDecoder, ConfiguredEncoder
 
 object CreateStatus200ResponseEnums {

@@ -11,22 +11,22 @@
  */
 package com.github.unknownnpc.masscaladon.generated.model
 
-import java.time.OffsetDateTime
 import io.circe.{Decoder, Encoder}
 import io.circe.derivation.{ConfiguredDecoder, ConfiguredEncoder}
 import com.github.unknownnpc.masscaladon.generated.core.AdditionalTypeSerializers.given
 import com.github.unknownnpc.masscaladon.generated.core.DateSerializers.given
 
   /**
-   * Represents a status that will be published at a future scheduled date.
+   * Object containing properties
    */
-case class ScheduledStatus(
-  /* ID of the scheduled status in the database. */
-  id: String,
-  /* Media that will be attached when the status is posted. */
-  mediaAttachments: Seq[MediaAttachment],
-  params: CreateStatus200ResponseParams,
-  /* The timestamp for when the status will be posted. */
-  scheduledAt: OffsetDateTime
+case class CreateStatusRequestPoll(
+  /* Possible answers to the poll. If provided, `media_ids` cannot be used, and `poll[expires_in]` must be provided. */
+  options: Option[Seq[String]] = None,
+  /* Duration that the poll should be open, in seconds. If provided, `media_ids` cannot be used, and `poll[options]` must be provided. */
+  expiresIn: Option[Int] = None,
+  /* Allow multiple choices? Defaults to false. */
+  multiple: Option[Boolean] = None,
+  /* Hide vote counts until the poll ends? Defaults to false. */
+  hideTotals: Option[Boolean] = None
 ) derives ConfiguredDecoder, ConfiguredEncoder
 

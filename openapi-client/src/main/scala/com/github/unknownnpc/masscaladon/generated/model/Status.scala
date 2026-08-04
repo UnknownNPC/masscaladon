@@ -53,7 +53,7 @@ case class Status(
   uri: String,
   /* Visibility of this status. */
   visibility: StatusVisibilityEnum,
-  application: Option[StatusApplication] = None,
+  application: Option[CreateStatus200ResponseApplication] = None,
   /* If the current token has an authorized user: Have you bookmarked this status? */
   bookmarked: Option[Boolean] = None,
   card: Option[PreviewCard] = None,
@@ -74,7 +74,7 @@ case class Status(
   /* If the current token has an authorized user: Have you pinned this status? Only appears if the status is pinnable. */
   pinned: Option[Boolean] = None,
   poll: Option[Poll] = None,
-  quote: Option[StatusQuote] = None,
+  quote: Option[CreateStatus200ResponseQuote] = None,
   quoteApproval: Option[QuoteApproval] = None,
   /* How many accepted quotes this status has. */
   quotesCount: Option[Int] = None,

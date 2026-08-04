@@ -84,11 +84,14 @@ lazy val openApiClient = project.in(file("openapi-client"))
       val configFile = openApiGeneratorConfig.value
       val templateDir = baseDirectory.value / "templates"
 
+      val fixedSpecFile = target.value / specFile.getName
+      IO.write(fixedSpecFile, OneOfSpecFix.fix(IO.read(specFile)))
+
       val cmd = Seq(
         "java", "-jar", generatorJar.getAbsolutePath,
         "generate",
         "-g", "scala-sttp",
-        "-i", specFile.getAbsolutePath,
+        "-i", fixedSpecFile.getAbsolutePath,
         "-o", outDir.getAbsolutePath,
         "-c", configFile.getAbsolutePath,
         "-t", templateDir.getAbsolutePath,

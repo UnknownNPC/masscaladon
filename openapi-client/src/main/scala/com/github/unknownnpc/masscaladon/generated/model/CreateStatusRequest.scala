@@ -19,6 +19,9 @@ import com.github.unknownnpc.masscaladon.generated.core.AdditionalTypeSerializer
 import com.github.unknownnpc.masscaladon.generated.core.DateSerializers.given
 
 case class CreateStatusRequest(
+  poll: Option[CreateStatusRequestPoll] = None,
+  /* The text content of the status. If `media_ids` is provided, this becomes optional. Attaching a `poll` is optional while `status` is provided. */
+  status: Option[String] = None,
   /* ID of the status being replied to, if status is a reply. */
   inReplyToId: Option[String] = None,
   /* ISO 639-1 language code for this status. */
@@ -35,11 +38,8 @@ case class CreateStatusRequest(
   spoilerText: Option[String] = None,
   /* Sets the visibility of the posted status to `public`, `unlisted`, `private`, `direct`. */
   visibility: Option[StatusVisibilityEnum] = None,
-  /* The text content of the status. If `media_ids` is provided, this becomes optional. Attaching a `poll` is optional while `status` is provided. */
-  status: String,
   /* Include Attachment IDs to be attached as media. If provided, `status` becomes optional, and `poll` cannot be used. */
-  mediaIds: Seq[String],
-  poll: UpdateStatusRequestPoll
+  mediaIds: Option[Seq[String]] = None
 ) derives ConfiguredDecoder, ConfiguredEncoder
 
 object CreateStatusRequestEnums {

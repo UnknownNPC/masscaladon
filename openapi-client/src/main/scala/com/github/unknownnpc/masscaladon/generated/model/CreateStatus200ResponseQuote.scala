@@ -11,22 +11,23 @@
  */
 package com.github.unknownnpc.masscaladon.generated.model
 
-import java.time.OffsetDateTime
+import com.github.unknownnpc.masscaladon.generated.model.QuoteStateEnum._
 import io.circe.{Decoder, Encoder}
 import io.circe.derivation.{ConfiguredDecoder, ConfiguredEncoder}
 import com.github.unknownnpc.masscaladon.generated.core.AdditionalTypeSerializers.given
 import com.github.unknownnpc.masscaladon.generated.core.DateSerializers.given
 
   /**
-   * Represents a status that will be published at a future scheduled date.
+   * Information about the status being quoted, if any
    */
-case class ScheduledStatus(
-  /* ID of the scheduled status in the database. */
-  id: String,
-  /* Media that will be attached when the status is posted. */
-  mediaAttachments: Seq[MediaAttachment],
-  params: CreateStatus200ResponseParams,
-  /* The timestamp for when the status will be posted. */
-  scheduledAt: OffsetDateTime
+case class CreateStatus200ResponseQuote(
+  /* The state of the quote. Unknown values should be treated as `unauthorized`. */
+  state: QuoteStateEnum,
+  /* The identifier of the status being quoted. This will be `null`, unless the `state` attribute is one of `accepted`, `blocked_account`, `blocked_domain` or `muted_account`, or the wrapping [Status]({{< relref \"entities/status\" >}}) entity has been obtained by calling `DELETE /api/v1/statuses/:id`. */
+  quotedStatusId: Option[String] = None,
+  quotedStatus: Option[Status] = None
 ) derives ConfiguredDecoder, ConfiguredEncoder
 
+object CreateStatus200ResponseQuoteEnums {
+
+}

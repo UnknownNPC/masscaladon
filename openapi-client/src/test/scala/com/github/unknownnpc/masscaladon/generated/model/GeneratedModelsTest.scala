@@ -135,4 +135,34 @@ class GeneratedModelsTest extends AnyFlatSpec with Matchers {
     roundTripped.map(_.translations) shouldBe Right(Some(translations))
   }
 
+  "CreateStatus200Response" should "decode a plain (non-scheduled) status response, with no `params`/`scheduled_at`" in {
+    // POST /api/v1/statuses returns Status or ScheduledStatus (oneOf). Before OneOfSpecFix,
+    // the merged model demanded ScheduledStatus-only fields (params, scheduled_at) on every
+    // response, so a plain immediate post failed to decode its own success response.
+    val body =
+      """{
+        |  "id": "1",
+        |  "created_at": "2024-01-01T00:00:00Z",
+        |  "content": "hello world",
+        |  "account": {
+        |    "id": "1", "username": "user1", "acct": "user1", "display_name": "User 1",
+        |    "locked": false, "bot": false, "group": false, "created_at": "2024-01-01T00:00:00Z",
+        |    "note": "", "url": null, "avatar": "https://example.social/x", "avatar_static": "https://example.social/x",
+        |    "header": "https://example.social/x", "header_static": "https://example.social/x",
+        |    "uri": "https://example.social/u/user1",
+        |    "followers_count": 0, "following_count": 0, "statuses_count": 0, "emojis": [], "fields": []
+        |  },
+        |  "media_attachments": [],
+        |  "mentions": [], "tags": [], "emojis": [],
+        |  "reblogs_count": 0, "favourites_count": 0, "replies_count": 0,
+        |  "uri": "https://example.social/statuses/1",
+        |  "sensitive": false, "spoiler_text": "", "visibility": "public"
+        |}""".stripMargin
+
+    val decoded = decode[CreateStatus200Response](body)
+
+    decoded.map(_.id) shouldBe Right("1")
+    decoded.map(_.params) shouldBe Right(None)
+  }
+
 }

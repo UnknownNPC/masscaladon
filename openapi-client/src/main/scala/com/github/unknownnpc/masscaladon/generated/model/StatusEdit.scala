@@ -36,6 +36,6 @@ case class StatusEdit(
   /* The content of the subject or content warning at this revision. */
   spoilerText: String,
   poll: Option[StatusEditPoll] = None,
-  quote: Option[StatusQuote] = None
+  quote: Option[CreateStatus200ResponseQuote] = None
 ) derives ConfiguredDecoder, ConfiguredEncoder
 
