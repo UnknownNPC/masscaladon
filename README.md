@@ -66,10 +66,8 @@ post match
 
 ## Project layout
 
-Two sbt modules, one pipeline: download the spec, patch it
-([`project/OneOfSpecFix.scala`](./project/OneOfSpecFix.scala) — works around an
-openapi-generator limitation around `oneOf` schemas), and generate a raw client from it
-→ wrap it in the hand-written `scala-client` API shown above.
+Two sbt modules, one pipeline: download the spec, generate a raw client from
+it, wrap it in the hand-written `scala-client` API shown above.
 
 ```
 sbt openApiClient/downloadMastodonSchema   # fetch the OpenAPI spec

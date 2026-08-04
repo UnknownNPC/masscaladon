@@ -19,8 +19,8 @@ classes when extending the client.
 - **`openapi-client`** — downloads the Mastodon OpenAPI spec
   (`downloadMastodonSchema` task; the fetched JSON is committed under
   `openapi-client/schema/` so a fresh checkout doesn't require network
-  access to build) and generates the raw client from it (`generateClient`
-  task). Generated sources under
+  access to build), patches it (`OneOfSpecFix`, see "Codegen" below), and
+  generates the raw client from it (`generateClient` task). Generated sources under
   `openapi-client/src/main/scala/.../generated/` are also committed (vendored),
   not produced fresh on every build.
 - **`scala-client`** — hand-written layer on top. See "The `scala-client` API"
@@ -162,6 +162,15 @@ overrides a handful of the generator's own Mustache templates:
   with `given`s, so model files can import exactly the codecs they need
   (`URI`, `OffsetDateTime`, `LocalDate`) at the point where `derives` needs
   them in scope.
+
+Before any of that runs, `generateClient` also patches the spec itself, via
+`project/OneOfSpecFix.scala` (invoked from `build.sbt` before the generator
+CLI runs): openapi-generator merges a `oneOf: [A, B, ...]` schema's `required`
+list by union instead of intersection, which generates model fields as
+mandatory when the API doesn't actually guarantee them across every variant.
+The fix walks every `oneOf` under `components.schemas` in the spec and
+corrects `required` to the intersection; it leaves the `oneOf: [X, {type: null}]`
+nullable idiom alone, since the generator already handles that case correctly.
 
 Other non-obvious pieces in `openapi-client/openapi-config.yaml`:
 
