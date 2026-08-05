@@ -17,20 +17,20 @@ object OneOfSpecFix {
   // `oneOf: [X, {type: null}]` nullable idiom, not a real variant.
   private def isNullSchema(j: Json): Boolean =
     j.asObject.exists { o =>
-      o.toMap.size == 1 && o.toMap.get("type").flatMap(_.asString).contains("null")
+      o.size == 1 && o("type").flatMap(_.asString).contains("null")
     }
 
-  private def resolveRef(ref: Json, schemas: Json): Json =
-    ref.asString match {
-      case Some(r) => schemas.hcursor.downField(r.stripPrefix("#/components/schemas/")).focus.getOrElse(Json.obj())
-      case None    => Json.obj()
-    }
+  private def resolveRef(ref: String, schemas: Json): Json =
+    schemas.hcursor
+      .downField(ref.stripPrefix("#/components/schemas/"))
+      .focus
+      .getOrElse(sys.error(s"OneOfSpecFix: unresolved $$ref: $ref"))
 
   // oneOf members are often a bare $ref, so resolve before inspecting.
   private def resolve(schema: Json, schemas: Json): Json =
-    schema.asObject.flatMap(_.toMap.get("$ref")) match {
+    schema.asObject.flatMap(_("$ref")).flatMap(_.asString) match {
       case Some(ref) => resolveRef(ref, schemas)
-      case None       => schema
+      case None      => schema
     }
 
   // required from the schema itself plus any allOf branch.
@@ -90,7 +90,7 @@ object OneOfSpecFix {
   private def walk(j: Json, schemas: Json): Json =
     j.asObject match {
       case Some(obj) =>
-        obj.toMap.get("oneOf").flatMap(_.asArray) match {
+        obj("oneOf").flatMap(_.asArray) match {
           case Some(members) if members.count(m => !isNullSchema(m)) >= 2 =>
             val siblings = JsonObject.fromIterable(obj.toList.filterNot(_._1 == "oneOf"))
             walk(flattenOneOf(members, siblings, schemas), schemas)

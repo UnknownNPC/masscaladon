@@ -76,14 +76,17 @@ final class Masscaladon private (
       case NonFatal(t) =>
         Left(MasscaladonClientException("Unexpected failure", t))
 
-  sys.addShutdownHook(
-    try this.close()
+  private val shutdownHook: Thread = sys.addShutdownHook(
+    try backend.close()
     catch
       case e: Throwable =>
         logger.error(s"Failed to auto-close backend: ${e.getMessage}", e),
   )
 
-  override def close(): Unit = backend.close()
+  override def close(): Unit =
+    try Runtime.getRuntime.removeShutdownHook(shutdownHook)
+    catch case _: IllegalStateException => ()
+    backend.close()
 
 object Masscaladon:
 
