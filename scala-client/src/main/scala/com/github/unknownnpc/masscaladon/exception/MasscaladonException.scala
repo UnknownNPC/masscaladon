@@ -36,6 +36,20 @@ class ForbiddenException(body: String)
 class NotFoundException(body: String)
     extends MasscaladonApiException(404, body, s"Not Found (404): $body")
 
+class PayloadTooLargeException(body: String)
+    extends MasscaladonApiException(
+      413,
+      body,
+      s"Payload Too Large (413): $body",
+    )
+
+class UnprocessableEntityException(body: String)
+    extends MasscaladonApiException(
+      422,
+      body,
+      s"Unprocessable Entity (422): $body",
+    )
+
 class RateLimitExceededException(body: String)
     extends MasscaladonApiException(
       429,
@@ -62,6 +76,8 @@ object MasscaladonException:
       case 401 => UnauthorizedException(body)
       case 403 => ForbiddenException(body)
       case 404 => NotFoundException(body)
+      case 413 => PayloadTooLargeException(body)
+      case 422 => UnprocessableEntityException(body)
       case 429 => RateLimitExceededException(body)
       case c if c >= 500 => ServerErrorException(c, body)
       case c => UnknownApiException(c, body)

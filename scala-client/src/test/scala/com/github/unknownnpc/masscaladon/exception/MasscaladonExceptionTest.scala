@@ -40,6 +40,24 @@ class MasscaladonExceptionTest extends AnyFlatSpec with Matchers {
     ]
   }
 
+  it should "map 413 to PayloadTooLargeException" in {
+    MasscaladonException.fromStatusCode(
+      StatusCode.PayloadTooLarge,
+      "too big",
+    ) shouldBe a[
+      PayloadTooLargeException,
+    ]
+  }
+
+  it should "map 422 to UnprocessableEntityException" in {
+    MasscaladonException.fromStatusCode(
+      StatusCode.UnprocessableEntity,
+      "validation failed",
+    ) shouldBe a[
+      UnprocessableEntityException,
+    ]
+  }
+
   it should "map 429 to RateLimitExceededException" in {
     MasscaladonException.fromStatusCode(
       StatusCode.TooManyRequests,
