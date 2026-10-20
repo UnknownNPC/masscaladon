@@ -100,7 +100,7 @@ Request *creation* and *execution* are fully decoupled:
   `Requests.media`, `Requests.accounts`, etc.
 - **Execution**: `Masscaladon` (`scala-client/.../client/Masscaladon.scala`)
   is a private-constructor class with a companion `apply` taking `baseUrl`
-  and `token`. `.execute(request)`/`.executeSync(request)` resolve the
+  and `token` (plus an overload taking a JDK `HttpClient`, for HTTP version/proxy/executor control; the caller owns that client). `.execute(request)`/`.executeSync(request)` resolve the
   request's relative URI against `baseUrl` (via `sttp.model.Uri.resolve`),
   authenticate, and send it:
   - **`.execute`** — async, returns `Future[T]`. Always fails with a
