@@ -10,7 +10,7 @@ object PublishSettings {
   // ThisBuild-scoped so this applies build-wide no matter which project
   // attaches it. Bump `version` by hand for each release.
   lazy val publishSettings: Seq[Setting[?]] = Seq(
-    ThisBuild / version := "0.0.2",
+    ThisBuild / version := "0.0.3",
     ThisBuild / versionScheme := Some("early-semver"),
     ThisBuild / homepage := Some(url(githubUrl)),
     ThisBuild / licenses := Seq(
