@@ -1,5 +1,7 @@
 package com.github.unknownnpc.masscaladon.client
 
+import java.net.http.HttpClient
+
 import scala.concurrent.Await
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
@@ -99,6 +101,23 @@ object Masscaladon:
     val backend = HttpClientFutureBackend(options =
       SttpBackendOptions.connectionTimeout(timeout),
     )
+    new Masscaladon(Uri.unsafeParse(baseUrl), token, timeout, backend)
+
+  /** Same as the default `apply`, but requests go through the given JDK
+    * `HttpClient`. Use it to pick the HTTP version (e.g.
+    * `HttpClient.newBuilder().version(HttpClient.Version.HTTP_1_1).build()` to
+    * avoid HTTP/2 stream resets on large uploads), a proxy, an executor, or an
+    * `SSLContext`. The caller owns `httpClient`: closing the returned
+    * `Masscaladon` does not shut it down.
+    */
+  def apply(
+      baseUrl: String,
+      token: String,
+      timeout: FiniteDuration,
+      httpClient: HttpClient,
+    )(using ExecutionContext,
+    ): Masscaladon =
+    val backend = HttpClientFutureBackend.usingClient(httpClient)
     new Masscaladon(Uri.unsafeParse(baseUrl), token, timeout, backend)
 
   /** Test-only escape hatch for injecting a stub backend instead of a real one.

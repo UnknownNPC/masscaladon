@@ -164,4 +164,48 @@ class MasscaladonTest extends AnyFlatSpec with Matchers {
     noException should be thrownBy mastodon.close()
   }
 
+  it should "send requests through a caller-supplied HttpClient" in {
+    // A cleartext HTTP/2-capable JDK client advertises `Upgrade: h2c`; one pinned
+    // to HTTP/1.1 does not. The local server records which it saw.
+    val upgradeHeader =
+      new java.util.concurrent.atomic.AtomicReference[String]("unset")
+    val server = com.sun.net.httpserver.HttpServer
+      .create(
+        new java.net.InetSocketAddress(
+          java.net.InetAddress.getLoopbackAddress,
+          0,
+        ),
+        0,
+      )
+    server.createContext(
+      "/ping",
+      exchange => {
+        upgradeHeader.set(exchange.getRequestHeaders.getFirst("Upgrade"))
+        val body = """{"ok":true}""".getBytes("UTF-8")
+        exchange.getResponseHeaders.add("Content-Type", "application/json")
+        exchange.sendResponseHeaders(200, body.length.toLong)
+        exchange.getResponseBody.write(body)
+        exchange.close()
+      },
+    )
+    server.start()
+    try
+      val http11 = java.net.http.HttpClient
+        .newBuilder()
+        .version(java.net.http.HttpClient.Version.HTTP_1_1)
+        .build()
+      val mastodon =
+        Masscaladon(
+          s"http://127.0.0.1:${server.getAddress.getPort}",
+          token,
+          5.seconds,
+          http11,
+        )
+
+      mastodon.executeSync(request()) shouldBe Right(Ping(true))
+      upgradeHeader.get() shouldBe null
+      mastodon.close()
+    finally server.stop(0)
+  }
+
 }
