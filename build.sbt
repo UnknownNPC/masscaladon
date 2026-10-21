@@ -85,7 +85,8 @@ lazy val openApiClient = project.in(file("openapi-client"))
       val templateDir = baseDirectory.value / "templates"
 
       val fixedSpecFile = target.value / specFile.getName
-      IO.write(fixedSpecFile, OneOfSpecFix.fix(IO.read(specFile)))
+      val specFixes: Seq[String => String] = Seq(OneOfSpecFix.fix, HeaderParamSpecFix.fix)
+      IO.write(fixedSpecFile, specFixes.foldLeft(IO.read(specFile))((spec, fix) => fix(spec)))
 
       val cmd = Seq(
         "java", "-jar", generatorJar.getAbsolutePath,
