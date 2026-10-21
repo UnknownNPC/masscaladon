@@ -47,15 +47,21 @@ returned attachment's `id` in the status:
 
 ```scala
 import java.io.File
+import scala.concurrent.duration.*
+
+// Any one request may take up to `timeout` (60 seconds by default): give
+// video uploads more.
+val uploader = Masscaladon("https://example.social", token = "...", timeout = 10.minutes)
 
 val post =
   for
-    media <- mastodon.executeSync(Requests.media.createMedia(file = File("cat.jpg")))
-    status <- mastodon.executeSync(Requests.statuses.createStatus(
+    media <- uploader.executeSync(Requests.media.createMedia(file = File("cat.mp4")))
+    status <- uploader.executeSync(Requests.statuses.createStatus(
       CreateStatusRequest(
         status = Some("look at this cat"),
         mediaIds = Some(Seq(media.id)),
       ),
+      idempotencyKey = Some(s"cat-${media.id}"),
     ))
   yield status
 
@@ -63,6 +69,65 @@ post match
   case Right(status) => println(s"posted: ${status.id}")
   case Left(error)   => println(s"failed: ${error.getMessage}")
 ```
+
+`idempotencyKey` makes a retry safe: for an hour, Mastodon answers a key it
+has seen with the status it created first instead of posting again. So the
+key must be unique to the post - never a constant.
+
+## Timeouts
+
+**Most of the time you set one number: the client's `timeout`.** It is how
+long any single request may take, and it defaults to 60 seconds:
+
+```scala
+import scala.concurrent.duration.*
+
+// Fine for posting text, reading timelines, etc.
+val mastodon = Masscaladon("https://example.social", token = "...")
+
+// Uploading videos? Allow each request more time.
+val uploader = Masscaladon("https://example.social", token = "...", timeout = 10.minutes)
+```
+
+"Take" means from sending the request until the response starts to arrive,
+so it covers the whole upload of a file plus the server's processing. If a
+large upload fails with a timeout, raise this number.
+
+### A different timeout for one request
+
+Give a single request its own limit with `.readTimeout(...)`. It wins over
+the client's `timeout` for that request only:
+
+```scala
+// Every other request gets 10 minutes; this one gives up after 5 seconds.
+uploader.executeSync(Requests.instance.getInstanceV2().readTimeout(5.seconds))
+```
+
+With `executeSync`, keep a per-request limit *below* the client's `timeout`:
+`executeSync` never waits longer than the client's `timeout`, so a longer
+per-request limit has no effect there. (`execute` returns a `Future` and
+doesn't wait at all, so a request's own limit always applies.)
+
+### Telling a timeout apart from other errors
+
+```scala
+import com.github.unknownnpc.masscaladon.exception.*
+import sttp.client3.SttpClientException
+
+uploader.executeSync(Requests.media.createMedia(file = File("big.mp4"))) match
+  case Right(media) => println(s"uploaded: ${media.id}")
+  // The request ran out of its time (the client's `timeout`, or its own `.readTimeout`).
+  case Left(e: MasscaladonClientException) if e.getCause.isInstanceOf[SttpClientException.TimeoutException] =>
+    println("upload timed out")
+  // executeSync stopped waiting (the client's `timeout`); the request may still finish.
+  case Left(e: MasscaladonTimeoutException) => println("gave up waiting")
+  case Left(e) => println(s"failed: ${e.getMessage}")
+```
+
+Connecting to the server is limited by the same `timeout`. If you pass your
+own `java.net.http.HttpClient` to `Masscaladon(baseUrl, token, timeout, httpClient)`,
+connecting is up to that client instead
+(`HttpClient.newBuilder().connectTimeout(...)`); everything above still applies.
 
 ## Project layout
 

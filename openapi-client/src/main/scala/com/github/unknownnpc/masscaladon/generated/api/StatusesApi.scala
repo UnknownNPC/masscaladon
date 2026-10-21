@@ -51,12 +51,12 @@ object StatusesApi {
    * @param createStatusRequest JSON request body parameters for creating a status. Different types of statuses have different requirements.
    * @param idempotencyKey Provide this header with any arbitrary string to prevent duplicate submissions of the same status. Consider using a hash or UUID generated client-side. Idempotency keys are stored for up to 1 hour.
    */
-  def createStatus(createStatusRequest: CreateStatusRequest, idempotencyKey: Option[io.circe.Json] = None
+  def createStatus(createStatusRequest: CreateStatusRequest, idempotencyKey: Option[String] = None
 ): Request[Either[ResponseException[String, Exception], CreateStatus200Response], Any] =
     basicRequest
       .method(Method.POST, uri"/api/v1/statuses")
       .contentType("application/json")
-      .header("Idempotency-Key", idempotencyKey.toString)
+      .header("Idempotency-Key", idempotencyKey)
       .body(createStatusRequest)
       .response(asJson[CreateStatus200Response])
 

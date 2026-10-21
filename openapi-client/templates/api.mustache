@@ -18,8 +18,9 @@ object {{classname}} {
   def {{operationId}}({{>methodParameters}}): Request[{{#separateErrorChannel}}Either[ResponseException[String, Exception], {{>operationReturnType}}]{{/separateErrorChannel}}{{^separateErrorChannel}}{{>operationReturnType}}{{/separateErrorChannel}}, Any] =
     basicRequest
       .method(Method.{{httpMethod.toUpperCase}}, uri"{{{path}}}{{#queryParams.0}}?{{#queryParams}}{{baseName}}=${ {{{paramName}}} }{{^-last}}&{{/-last}}{{/queryParams}}{{/queryParams.0}}{{#isApiKey}}{{#isKeyInQuery}}{{^queryParams.0}}?{{/queryParams.0}}{{#queryParams.0}}&{{/queryParams.0}}{{keyParamName}}=${apiKey.value}&{{/isKeyInQuery}}{{/isApiKey}}")
-      .contentType({{#consumes.0}}"{{{mediaType}}}"{{/consumes.0}}{{^consumes}}"application/json"{{/consumes}}){{#headerParams}}
-      .header({{>paramCreation}}){{/headerParams}}{{#authMethods}}{{#isBasic}}{{#isBasicBasic}}
+      .contentType({{#consumes.0}}"{{{mediaType}}}"{{/consumes.0}}{{^consumes}}"application/json"{{/consumes}}){{#headerParams}}{{#required}}
+      .header("{{baseName}}", {{paramName}}{{^isString}}.toString{{/isString}}){{/required}}{{^required}}
+      .header("{{baseName}}", {{paramName}}{{^isString}}.map(_.toString){{/isString}}){{/required}}{{/headerParams}}{{#authMethods}}{{#isBasic}}{{#isBasicBasic}}
       .auth.basic(username, password){{/isBasicBasic}}{{#isBasicBearer}}
       .auth.bearer(bearerToken){{/isBasicBearer}}{{/isBasic}}{{#isApiKey}}{{#isKeyInHeader}}
       .header("{{keyParamName}}", apiKey){{/isKeyInHeader}}{{#isKeyInCookie}}
