@@ -76,52 +76,58 @@ key must be unique to the post - never a constant.
 
 ## Timeouts
 
-There are two, and the second one defaults to the first:
-
-| | Set with | Bounds | Fails with |
-| --- | --- | --- | --- |
-| **Client timeout** | `Masscaladon(..., timeout = ...)`, 60 s by default | every request the client sends, and how long `executeSync` waits | see below |
-| **Request read timeout** | `.readTimeout(...)` on one request | that request only | `MasscaladonClientException` caused by sttp's `TimeoutException` |
-
-A request's read timeout is how long it may take until the response starts
-to arrive - sending the request (a whole upload, too) and the server's work
-included. A request that doesn't set one gets the client timeout:
+**Most of the time you set one number: the client's `timeout`.** It is how
+long any single request may take, and it defaults to 60 seconds:
 
 ```scala
 import scala.concurrent.duration.*
 
-val mastodon = Masscaladon("https://example.social", token = "...", timeout = 10.minutes)
+// Fine for posting text, reading timelines, etc.
+val mastodon = Masscaladon("https://example.social", token = "...")
 
-// Read timeout 10 minutes: the client's.
-mastodon.executeSync(Requests.media.createMedia(file = File("big.mp4")))
-
-// Read timeout 5 seconds: set on the request, so kept.
-mastodon.executeSync(Requests.instance.getInstanceV2().readTimeout(5.seconds))
+// Uploading videos? Allow each request more time.
+val uploader = Masscaladon("https://example.social", token = "...", timeout = 10.minutes)
 ```
 
-`executeSync` waits up to the client timeout, whatever the request's own
-read timeout. Which one fires first decides the error:
+"Take" means from sending the request until the response starts to arrive,
+so it covers the whole upload of a file plus the server's processing. If a
+large upload fails with a timeout, raise this number.
+
+### A different timeout for one request
+
+Give a single request its own limit with `.readTimeout(...)`. It wins over
+the client's `timeout` for that request only:
 
 ```scala
-val sync = Masscaladon("https://example.social", token = "...", timeout = 30.seconds)
-
-// The request gives up first (10 s < 30 s):
-//   Left(MasscaladonClientException("Unexpected failure", cause = sttp TimeoutException))
-sync.executeSync(Requests.statuses.getStatus(id).readTimeout(10.seconds))
-
-// executeSync gives up first (30 s < 2 min); the request goes on in the background:
-//   Left(MasscaladonTimeoutException)
-sync.executeSync(Requests.media.createMedia(file = File("big.mp4")).readTimeout(2.minutes))
+// Every other request gets 10 minutes; this one gives up after 5 seconds.
+uploader.executeSync(Requests.instance.getInstanceV2().readTimeout(5.seconds))
 ```
 
-So with `executeSync`, a per-request read timeout only matters when it is
-shorter than the client's. With `execute` (a `Future`) only the read timeout
-applies: there is nothing waiting on the `Future` but your own code.
+With `executeSync`, keep a per-request limit *below* the client's `timeout`:
+`executeSync` never waits longer than the client's `timeout`, so a longer
+per-request limit has no effect there. (`execute` returns a `Future` and
+doesn't wait at all, so a request's own limit always applies.)
 
-The client timeout is also the connect timeout of the default backend. With
-`Masscaladon(baseUrl, token, timeout, httpClient)`, connecting is up to the
-`HttpClient` you pass (`HttpClient.newBuilder().connectTimeout(...)`); the
-read timeout and the `executeSync` wait still apply.
+### Telling a timeout apart from other errors
+
+```scala
+import com.github.unknownnpc.masscaladon.exception.*
+import sttp.client3.SttpClientException
+
+uploader.executeSync(Requests.media.createMedia(file = File("big.mp4"))) match
+  case Right(media) => println(s"uploaded: ${media.id}")
+  // The request ran out of its time (the client's `timeout`, or its own `.readTimeout`).
+  case Left(e: MasscaladonClientException) if e.getCause.isInstanceOf[SttpClientException.TimeoutException] =>
+    println("upload timed out")
+  // executeSync stopped waiting (the client's `timeout`); the request may still finish.
+  case Left(e: MasscaladonTimeoutException) => println("gave up waiting")
+  case Left(e) => println(s"failed: ${e.getMessage}")
+```
+
+Connecting to the server is limited by the same `timeout`. If you pass your
+own `java.net.http.HttpClient` to `Masscaladon(baseUrl, token, timeout, httpClient)`,
+connecting is up to that client instead
+(`HttpClient.newBuilder().connectTimeout(...)`); everything above still applies.
 
 ## Project layout
 
