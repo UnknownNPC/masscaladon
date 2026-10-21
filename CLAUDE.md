@@ -19,7 +19,7 @@ classes when extending the client.
 - **`openapi-client`** — downloads the Mastodon OpenAPI spec
   (`downloadMastodonSchema` task; the fetched JSON is committed under
   `openapi-client/schema/` so a fresh checkout doesn't require network
-  access to build), patches it (`OneOfSpecFix`, see "Codegen" below), and
+  access to build), patches it (`OneOfSpecFix`, `HeaderParamSpecFix`, see "Codegen" below), and
   generates the raw client from it (`generateClient` task). Generated sources under
   `openapi-client/src/main/scala/.../generated/` are also committed (vendored),
   not produced fresh on every build.
@@ -103,6 +103,11 @@ Request *creation* and *execution* are fully decoupled:
   and `token` (plus an overload taking a JDK `HttpClient`, for HTTP version/proxy/executor control; the caller owns that client). `.execute(request)`/`.executeSync(request)` resolve the
   request's relative URI against `baseUrl` (via `sttp.model.Uri.resolve`),
   authenticate, and send it:
+  - **Timeout**: the `timeout` given to `apply` is each request's read
+    timeout, applied in `.execute` to any request still carrying sttp's own
+    1-minute default (a request's explicit `.readTimeout(...)` is kept), and
+    how long `.executeSync` waits. Without it sttp's minute cut off every
+    slower request - a video upload - however long `timeout` was.
   - **`.execute`** — async, returns `Future[T]`. Always fails with a
     `MasscaladonException` subtype (HTTP errors mapped by status code,
     network/decoding failures wrapped as `MasscaladonClientException`) —
@@ -157,6 +162,12 @@ overrides a handful of the generator's own Mustache templates:
   wrapped in `Some(...)` so the `Seq(...).flatten` building a multipart body
   stays uniformly `Option`-typed; Scala 3 won't infer `.flatten` across a mix
   of bare and `Option`-wrapped elements the way Scala 2.13 did.
+- **`api.mustache` (header parameters)** — the stock template rendered every
+  header with `{{>paramCreation}}`, i.e. `param.toString`, so an optional
+  header became `None` / `Some(...)` on the wire. A required header is now
+  sent as its value, an optional one through sttp's
+  `.header(name, Option[String])`, which leaves it out on `None`. Non-string
+  scalars are rendered with `.toString`.
 - **`dateSerializers.mustache` / `additionalTypeSerializers.mustache`** —
   turned from `trait`s mixed into `JsonSupport` into standalone `object`s
   with `given`s, so model files can import exactly the codecs they need
@@ -172,16 +183,20 @@ The fix walks every `oneOf` under `components.schemas` in the spec and
 corrects `required` to the intersection; it leaves the `oneOf: [X, {type: null}]`
 nullable idiom alone, since the generator already handles that case correctly.
 
+`project/HeaderParamSpecFix.scala` runs after it: a header value is text, but
+the upstream spec types some header parameters as a free-form `object`
+(`Idempotency-Key` on `POST /api/v1/statuses`), which `typeMappings` would
+turn into `io.circe.Json`. Every header parameter whose schema is not a
+scalar (string, integer, number, boolean) becomes `{type: string}`, wherever
+it is declared (operation, path item, `components.parameters`), keeping its
+`description`.
+
 Other non-obvious pieces in `openapi-client/openapi-config.yaml`:
 
 - `typeMappings: { object: io.circe.Json }` — free-form/untyped schema
   properties (e.g. `Rule.translations`) generate as `io.circe.Json` instead
-  of `Any` (which circe can't derive a codec for). One header parameter
-  (`Idempotency-Key` on `POST /api/v1/statuses`) is *also* typed as a
-  free-form object in the upstream spec even though it's really a string;
-  that's handled in the caller by wrapping a plain `String` in
-  `Json.fromString` before passing it to `createStatus`, rather than fixing
-  this generically.
+  of `Any` (which circe can't derive a codec for). Header parameters never
+  reach this mapping: `HeaderParamSpecFix` types them as strings first.
 - `-Xmax-inlines:64` in `project/Settings.scala` — circe's `derives`
   expansion for large models (`Status`, ~44 fields) exceeds the default
   inline budget (32).
