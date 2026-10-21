@@ -13,6 +13,7 @@ import com.github.unknownnpc.masscaladon.exception.MasscaladonException
 import com.github.unknownnpc.masscaladon.exception.MasscaladonTimeoutException
 import com.github.unknownnpc.masscaladon.logging.Logging
 
+import sttp.client3.DefaultReadTimeout
 import sttp.client3.HttpClientFutureBackend
 import sttp.client3.Request
 import sttp.client3.ResponseException
@@ -36,6 +37,10 @@ import sttp.model.Uri
   *   case Right(status) => println(status)
   *   case Left(error)   => println(s"failed: ${error.getMessage}")
   * }}}
+  *
+  * `timeout` bounds every request: it is the read timeout of each request sent
+  * (unless the request sets its own, see [[execute]]) and how long
+  * [[executeSync]] waits. A large media upload needs a timeout to match.
   */
 final class Masscaladon private (
     baseUrl: Uri,
@@ -46,10 +51,14 @@ final class Masscaladon private (
     extends Logging
     with AutoCloseable:
 
+  /** Sends `request` to this client's instance. Its read timeout is the
+    * client's `timeout`, unless the request was given one of its own with
+    * `.readTimeout(...)`, which is kept.
+    */
   def execute[T](
       request: Request[Either[ResponseException[String, Exception], T], Any],
     ): Future[T] =
-    request.copy(uri = baseUrl.resolve(request.uri))
+    withClientTimeout(request).copy(uri = baseUrl.resolve(request.uri))
       .auth.bearer(token)
       .send(backend)
       .flatMap(response =>
@@ -77,6 +86,14 @@ final class Masscaladon private (
         Left(MasscaladonTimeoutException(timeout, e))
       case NonFatal(t) =>
         Left(MasscaladonClientException("Unexpected failure", t))
+
+  // sttp gives every request a 1-minute read timeout, which would otherwise
+  // cut off anything slower (a video upload) long before `timeout` runs out.
+  // A request still carrying that default gets the client's timeout instead.
+  private def withClientTimeout[T](request: Request[T, Any]): Request[T, Any] =
+    if request.options.readTimeout == DefaultReadTimeout then
+      request.readTimeout(timeout)
+    else request
 
   private val shutdownHook: Thread = sys.addShutdownHook(
     try backend.close()
